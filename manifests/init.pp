@@ -414,26 +414,49 @@ class corosync(
   if $enable_secauth {
     case $authkey_source {
       'file': {
-        file { '/etc/corosync/authkey':
-          ensure  => file,
-          source  => $authkey,
-          mode    => '0400',
-          owner   => 'root',
-          group   => 'root',
-          notify  => Service['corosync'],
-          require => $corosync_package_require,
+        if $manage_corosync_service {
+          file { '/etc/corosync/authkey':
+            ensure  => file,
+            source  => $authkey,
+            mode    => '0400',
+            owner   => 'root',
+            group   => 'root',
+            notify  => Service['corosync'],
+            require => $corosync_package_require,
+          }
+        } else {
+          file { '/etc/corosync/authkey':
+            ensure  => file,
+            source  => $authkey,
+            mode    => '0400',
+            owner   => 'root',
+            group   => 'root',
+            require => $corosync_package_require,
+          }
         }
         File['/etc/corosync/authkey'] -> File['/etc/corosync/corosync.conf']
       }
       'string': {
-        file { '/etc/corosync/authkey':
-          ensure  => file,
-          content => $authkey,
-          mode    => '0400',
-          owner   => 'root',
-          group   => 'root',
-          notify  => Service['corosync'],
-          require => $corosync_package_require,
+        if $manage_corosync_service {
+          file { '/etc/corosync/authkey':
+            ensure  => file,
+            content => $authkey,
+            mode    => '0400',
+            owner   => 'root',
+            group   => 'root',
+            notify  => Service['corosync'],
+            require => $corosync_package_require,
+          }
+        } else {
+          file { '/etc/corosync/authkey':
+            ensure  => file,
+            content => $authkey,
+            mode    => '0400',
+            owner   => 'root',
+            group   => 'root',
+            notify  => Service['corosync'],
+            require => $corosync_package_require,
+          }
         }
         File['/etc/corosync/authkey'] -> File['/etc/corosync/corosync.conf']
       }
