@@ -524,15 +524,27 @@ class corosync(
 
   case $::osfamily {
     'Debian': {
-      augeas { 'enable corosync':
-        lens    => 'Shellvars.lns',
-        incl    => '/etc/default/corosync',
-        context => '/files/etc/default/corosync',
-        changes => [
-          'set START "yes"',
-        ],
-        require => $corosync_package_require,
-        before  => Service['corosync'],
+      if $manage_corosync_service {
+        augeas { 'enable corosync':
+          lens    => 'Shellvars.lns',
+          incl    => '/etc/default/corosync',
+          context => '/files/etc/default/corosync',
+          changes => [
+            'set START "yes"',
+          ],
+          require => $corosync_package_require,
+          before  => Service['corosync'],
+        }
+      } else {
+        augeas { 'enable corosync':
+          lens    => 'Shellvars.lns',
+          incl    => '/etc/default/corosync',
+          context => '/files/etc/default/corosync',
+          changes => [
+            'set START "yes"',
+          ],
+          require => $corosync_package_require,
+        }
       }
     }
     default: {}
